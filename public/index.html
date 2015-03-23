@@ -1,0 +1,68 @@
+<!doctype html>
+<html><head>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script src="sockjs-0.3.4.js"></script>
+    <script>
+
+      var socket;
+      var sendIntv = undefined;
+
+      var openSocket = function(){
+        socket= new SockJS('http://localhost:8090/sjs');
+        socket.onopen = function(){
+          console.log('socket opened.');
+          sendIntv = setInterval(function(){
+            var testData = {
+              timestamp: (new Date()).valueOf()
+            }
+            var payload = JSON.stringify(testData)
+            console.log('send data to server', payload);
+            socket.send(payload);
+          }, 1000);
+        }
+        socket.onmessage = function(msg){
+          console.log('socket receieved.');
+        }
+        socket.onclose = function(e){
+          console.log('socket closed.');
+          clearInterval(sendIntv);
+          sendIntv = undefined
+        }
+      }
+
+      var closeSocket = function(){
+        if(socket){
+          socket.close();
+        }
+      }
+
+      $(function () {
+
+        $('.btn_test_action').click(function (e) {
+          e.preventDefault();
+          var role = $(this).attr("role");
+
+          switch(role){
+            case "open":
+              openSocket();
+              break;
+            case "close":
+              closeSocket();
+              break;
+          }
+        });
+
+      });
+    </script>
+</head>
+<body lang="en">
+<h1>sockjs test page</h1>
+
+<ul>
+    <li><a href="#" class="btn_test_action" role="open">open</a></li>
+    <li><a href="#" class="btn_test_action" role="close">close</a></li>
+</ul>
+
+
+</body>
+</html>

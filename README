@@ -1,0 +1,29 @@
+# a simple project to reproducing the exception when sockjs run on cluster mode.
+
+### vertx version using
+  - 3.0.0-SNAPSHOT
+
+### steps for reproducing server exception
+  - run the project under cluster mode
+  - launch the web browser with url http://localhost:8090
+  - click the open button
+  - it could show sockjs open and start send data to server
+  - click the close button
+  - server throw NullPointerException
+
+### stackstracs
+java.lang.NullPointerException
+  at io.vertx.core.eventbus.impl.EventBusImpl.lambda$removeSub$109(EventBusImpl.java:662)
+  at io.vertx.core.eventbus.impl.EventBusImpl$$Lambda$67/1909028149.handle(Unknown Source)
+  at io.vertx.core.impl.FutureImpl.checkCallHandler(FutureImpl.java:139)
+  at io.vertx.core.impl.FutureImpl.setHandler(FutureImpl.java:100)
+  at io.vertx.core.impl.ContextImpl.lambda$null$1(ContextImpl.java:223)
+  at io.vertx.core.impl.ContextImpl$$Lambda$6/1279943786.handle(Unknown Source)
+  at io.vertx.core.impl.ContextImpl.lambda$wrapTask$3(ContextImpl.java:260)
+  at io.vertx.core.impl.ContextImpl$$Lambda$7/800657071.run(Unknown Source)
+  at io.netty.util.concurrent.SingleThreadEventExecutor.runAllTasks(SingleThreadEventExecutor.java:380)
+  at io.netty.channel.nio.NioEventLoop.run(NioEventLoop.java:357)
+  at io.netty.util.concurrent.SingleThreadEventExecutor$2.run(SingleThreadEventExecutor.java:116)
+  at java.lang.Thread.run(Thread.java:745)
+
+
